@@ -10,7 +10,7 @@ const app = express();
 app.use(cors)
 
 // Set the port for the server to listen on
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3100;
 
 
 
