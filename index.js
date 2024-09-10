@@ -19,9 +19,9 @@ app.get('/', (req, res) => {
 app.listen(PORT, async() => {
   try {
       await connection;
-      console.log('MongoDB Connected....... OK')
+      console.log('MongoDB Connected...... OK')
   } catch (error) {
-    console.log('MongoDB Not Connected....... NOT')
+    console.log('MongoDB Not Connected...... NOT')
   }
   console.log(`Server is running on port ${PORT}`);
 });
