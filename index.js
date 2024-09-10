@@ -1,6 +1,8 @@
 // Import the Express module
 import express from 'express';
 import connection from './src/config/db.js';
+import router from './src/routes/userRoutes.js';
+
 
 // Initialize the Express app
 const app = express();
@@ -9,9 +11,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Define a simple route
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
+app.use('/user' ,router)
+app.get('/',(req,res)=>{
+  res.send("Hello World")
+})
 
 
 
