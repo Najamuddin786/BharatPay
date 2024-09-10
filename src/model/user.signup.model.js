@@ -14,6 +14,6 @@ const userSingSchema = new mongoose.Schema({
 
 
 
-const UserSingModel = mongoose.model('UserSing', userSingSchema);
+const UserSignModel = mongoose.model('UserSing', userSingSchema);
 
-export default UserSingModel;
+export default UserSignModel;

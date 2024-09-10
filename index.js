@@ -10,6 +10,10 @@ const app = express();
 // Set the port for the server to listen on
 const PORT = process.env.PORT || 3000;
 
+
+
+app.use(express.json());
+
 // Define a simple route
 app.use('/user' ,router)
 app.get('/',(req,res)=>{

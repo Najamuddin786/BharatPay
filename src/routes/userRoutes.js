@@ -1,27 +1,28 @@
 import express from "express";
-import UserSingModel from '../model/user.singup.model.js'
+import UserSignupModel from '../model/user.signup.model.js'; // corrected import
 
 const router = express.Router();
 
 // -----------
-router.post('/singup',async(req,res)=>{
-    const data=req.body;
+router.post('/signup', async (req, res) => {  // corrected 'singup' to 'signup'
+    const data = req.body;
+
     try {
-        let existingUser=await UserSingModel.findOne({number:data.number})
-        if(existingUser){
+        // Check if user already exists
+        let existingUser = await UserSignupModel.findOne({ number: data.number });
+        if (existingUser) {
             return res.status(400).send("User already exists");
         }
-        const newUser = new UserSingModel(data)
+
+        // Create new user
+        const newUser = new UserSignupModel(data);
         await newUser.save();
+
         res.status(201).send("User created successfully");
     } catch (error) {
-        console.error("Signup error:", error);
-        res.status(500).send("Server error");
-        
+        console.error("Signup error:", error);  // added error logging
+        res.status(500).send("Signup error, Server error");
     }
-
-})
-
+});
 
 export default router;
-
