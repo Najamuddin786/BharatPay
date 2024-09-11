@@ -44,13 +44,15 @@ router.post('/login', async (req, res) => {
         let name = user.name;
         let number = user.number;
         let password = user.password;
+        let referralCode = user.referralCode;
 
         // If login is successful, send the user's details (name, number, password)
         return res.status(200).json({
             message: "Login successful",
             name: name,
             number: number,
-            password: password
+            password: password,
+            referralCode:referralCode
         });
 
     } catch (error) {
