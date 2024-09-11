@@ -32,12 +32,12 @@ router.post('/login', async (req, res) => {
         // Check if user exists by number
         let user = await UserSignupModel.findOne({ number: data.number });
         if (!user) {
-            return res.status(400).send("Number doesn't match");
+            return res.status(202).send("Number doesn't match");
         }
 
         // Check if password matches
         if (user.password !== data.password) {  // Comparing password
-            return res.status(400).send("Password doesn't match");
+            return res.status(202).send("Password doesn't match");
         }
 
         // Get user's details
