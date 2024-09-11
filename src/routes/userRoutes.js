@@ -11,7 +11,7 @@ router.post('/signup', async (req, res) => {  // corrected 'singup' to 'signup'
         // Check if user already exists
         let existingUser = await UserSignupModel.findOne({ number: data.number });
         if (existingUser) {
-            return res.status(400).send("User already exists");
+            return res.status(202).send("User already exists");
         }
 
         // Create new user

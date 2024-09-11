@@ -7,7 +7,7 @@ const userSingSchema = new mongoose.Schema({
   name: { type: String, required: true },
   number: { type: Number, required: true },
   password: { type: String, required: true },
-  referral: { type: String, required: true }
+  referralCode: { type: String, required: true }
 });
 
 // Create a model using the schema
