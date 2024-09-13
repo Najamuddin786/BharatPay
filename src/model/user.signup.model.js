@@ -4,10 +4,11 @@ import mongoose from "mongoose";
 
 
 const userSingSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String},
   number: { type: Number, required: true },
   password: { type: String, required: true },
-  referralCode: { type: String, required: true }
+  referralCode: { type: String},
+  utr:[]
 });
 
 // Create a model using the schema

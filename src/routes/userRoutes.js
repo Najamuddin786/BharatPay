@@ -1,5 +1,6 @@
 import express from "express";
 import UserSignupModel from '../model/user.signup.model.js'; // corrected import
+import moment from 'moment-timezone';
 
 const router = express.Router();
 
@@ -60,6 +61,39 @@ router.post('/login', async (req, res) => {
         res.status(500).send("Login error, User Login Fail");
     }
 });
+
+router.post('/utr',async(req,res)=>{
+    let data=req.body
+    let currentISTTime = moment.tz("Asia/Kolkata").format('YYYY-MM-DD HH:mm:ss');
+    try {
+        let resp=await UserSignupModel.findOne({'utr.utr':data.utr})
+        if(resp){
+            console.log(resp)
+            res.send('UTR all ready Claimed')
+        }else{
+            let user=await UserSignupModel.findOne({'number':data.number})
+     
+        if(user.number && user.password==data.password){
+            user.utr.push({'utr':data.utr,'amount':data.amount,"channel":data.channel,'updatedAt':currentISTTime})
+            // res.send(currentISTTime)
+            await user.save()
+            res.send([user,'tsx_no','After few min updated'])
+        }
+            
+        }
+        
+    } catch (error) {
+        // const newUser = new UserSignupModel(data);
+        // await newUser.save();
+        console.log(error)
+        res.send(error)
+        
+
+        
+    }
+
+    // res.send(data)
+})
 
 
 
