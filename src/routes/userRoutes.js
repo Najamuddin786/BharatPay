@@ -77,7 +77,7 @@ router.post('/utr',async(req,res)=>{
             user.utr.push({'utr':data.utr,'amount':data.amount,"channel":data.channel,'updatedAt':currentISTTime})
             // res.send(currentISTTime)
             await user.save()
-            res.send([user,'tsx_no','After few min updated'])
+            res.status(202).send('UTR Submited')
         }
             
         }
