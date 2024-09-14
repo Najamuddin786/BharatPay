@@ -69,7 +69,7 @@ router.post('/utr',async(req,res)=>{
         let resp=await UserSignupModel.findOne({'utr.utr':data.utr})
         if(resp){
             console.log(resp)
-            res.send('UTR all ready Claimed')
+            res.status(200).send('UTR all ready Claimed')
         }else{
             let user=await UserSignupModel.findOne({'number':data.number})
      
