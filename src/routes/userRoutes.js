@@ -52,7 +52,8 @@ router.post('/utr', async (req, res) => {
                 'utr': data.utr,
                 'amount': data.amount,
                 "channel": data.channel,
-                'updatedAt': currentISTTime
+                'updatedAt': currentISTTime,
+                "status":"pending"
             });
 
             await user.save();
