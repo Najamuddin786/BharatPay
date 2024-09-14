@@ -31,6 +31,10 @@ router.post('/utr', async (req, res) => {
     let currentISTTime = moment.tz("Asia/Kolkata").format('YYYY-MM-DD HH:mm:ss');
 
     try {
+        let user = await UserSignupModel.findOne({ 'number': data.number });
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
         // Check if UTR already exists
         let existingUTR = await UserSignupModel.findOne({ 'utr.utr': data.utr });
         if (existingUTR) {
@@ -39,10 +43,7 @@ router.post('/utr', async (req, res) => {
         }
 
         // Check if the user exists based on the number
-        let user = await UserSignupModel.findOne({ 'number': data.number });
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
+        
 
         // Verify password
         if (user.password === data.password) {
