@@ -68,6 +68,28 @@ router.post('/utr', async (req, res) => {
     }
 })
 
+router.post('/utrHis', async (req, res) => {
+    let data = req.body;
+
+    try {
+        // Find the user by number
+        let user = await UserSignupModel.findOne({ 'number': data.number });
+        
+        // Check if user exists and if the password matches
+        if (user && user.password === data.password) {
+            res.status(200).send([{"uts":user.utr},{"ch":user.utr}]);
+        } else {
+            res.status(404).send("User Not Found");
+        }
+
+    } catch (error) {
+        // Handle any errors that might occur during the database query
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+});
+
+
 
 
 
