@@ -26,73 +26,44 @@ router.post('/signup', async (req, res) => {  // corrected 'singup' to 'signup'
     }
 });
 // -----------USER LOGIN
-router.post('/login', async (req, res) => {
-    const data = req.body;
-
-    try {
-        // Check if user exists by number
-        let user = await UserSignupModel.findOne({ number: data.number });
-        if (!user) {
-            return res.status(202).send("Number doesn't match");
-        }
-
-        // Check if password matches
-        if (user.password !== data.password) {  // Comparing password
-            return res.status(202).send("Password doesn't match");
-        }
-
-        // Get user's details
-        let name = user.name;
-        let number = user.number;
-        let password = user.password;
-        let referralCode = user.referralCode;
-
-        // If login is successful, send the user's details (name, number, password)
-        return res.status(200).json({
-            message: "Login successful",
-            name: name,
-            number: number,
-            password: password,
-            referralCode:referralCode
-        });
-
-    } catch (error) {
-        console.error("User Login Fail:", error);  // added error logging
-        res.status(500).send("Login error, User Login Fail");
-    }
-});
-
-router.post('/utr',async(req,res)=>{
-    let data=req.body
+router.post('/utr', async (req, res) => {
+    let data = req.body;
     let currentISTTime = moment.tz("Asia/Kolkata").format('YYYY-MM-DD HH:mm:ss');
+
     try {
-        let resp=await UserSignupModel.findOne({'utr.utr':data.utr})
-        if(resp){
-            console.log(resp)
-            res.status(200).send('UTR all ready Claimed')
-        }else{
-            let user=await UserSignupModel.findOne({'number':data.number})
-     
-        if(user.number && user.password==data.password){
-            user.utr.push({'utr':data.utr,'amount':data.amount,"channel":data.channel,'updatedAt':currentISTTime})
-            // res.send(currentISTTime)
-            await user.save()
-            res.status(202).send('UTR Submited')
+        // Check if UTR already exists
+        let existingUTR = await UserSignupModel.findOne({ 'utr.utr': data.utr });
+        if (existingUTR) {
+            console.log(existingUTR);
+            return res.status(200).send('UTR already claimed');
         }
-            
+
+        // Check if the user exists based on the number
+        let user = await UserSignupModel.findOne({ 'number': data.number });
+        if (!user) {
+            return res.status(404).send('User not found');
         }
-        
+
+        // Verify password
+        if (user.password === data.password) {
+            // Add UTR information to user's array
+            user.utr.push({
+                'utr': data.utr,
+                'amount': data.amount,
+                "channel": data.channel,
+                'updatedAt': currentISTTime
+            });
+
+            await user.save();
+            return res.status(202).send('UTR submitted successfully');
+        } else {
+            return res.status(401).send('Invalid password');
+        }
+
     } catch (error) {
-        // const newUser = new UserSignupModel(data);
-        // await newUser.save();
-        console.log(error)
-        res.send(error)
-        
-
-        
+        console.error(error);
+        return res.status(500).send('Server error');
     }
-
-    // res.send(data)
 })
 
 
