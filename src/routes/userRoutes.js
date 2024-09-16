@@ -26,6 +26,42 @@ router.post('/signup', async (req, res) => {  // corrected 'singup' to 'signup'
     }
 });
 // -----------USER LOGIN
+router.post('/login', async (req, res) => {
+    const data = req.body;
+
+    try {
+        // Check if user exists by number
+        let user = await UserSignupModel.findOne({ number: data.number });
+        if (!user) {
+            return res.status(202).send("Number doesn't match");
+        }
+
+        // Check if password matches
+        if (user.password !== data.password) {  // Comparing password
+            return res.status(202).send("Password doesn't match");
+        }
+
+        // Get user's details
+        let name = user.name;
+        let number = user.number;
+        let password = user.password;
+        let referralCode = user.referralCode;
+
+        // If login is successful, send the user's details (name, number, password)
+        return res.status(200).json({
+            message: "Login successful",
+            name: name,
+            number: number,
+            password: password,
+            referralCode:referralCode
+        });
+
+    } catch (error) {
+        console.error("User Login Fail:", error);  // added error logging
+        res.status(500).send("Login error, User Login Fail");
+    }
+});
+// -----------------
 router.post('/utr', async (req, res) => {
     let data = req.body;
     let currentISTTime = moment.tz("Asia/Kolkata").format('YYYY-MM-DD HH:mm:ss');
