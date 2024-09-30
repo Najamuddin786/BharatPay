@@ -3,6 +3,7 @@ import express from 'express';
 import connection from './src/config/db.js';
 import router from './src/routes/userRoutes.js';
 import routerAdmin from './src/routes/adminRoutes.js';
+import product from './src/routes/productRouter.js';
 import cors from 'cors'
 
 
@@ -20,6 +21,7 @@ app.use(express.json());
 // Define a simple route
 app.use('/user' ,router)
 app.use('/admin' ,routerAdmin)
+app.use('/product' ,product)
 app.get('/',(req,res)=>{
   res.send("Hello World")
 })
