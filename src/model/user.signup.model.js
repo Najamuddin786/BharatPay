@@ -10,7 +10,8 @@ const userSingSchema = new mongoose.Schema({
   referralCode: { type: String},
   status:String,
   recharge:Number,
-  utr:[]
+  utr:[],
+  card:[]
 });
 
 // Create a model using the schema
