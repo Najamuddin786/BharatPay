@@ -9,7 +9,7 @@ const userSingSchema = new mongoose.Schema({
   password: { type: String, required: true },
   referralCode: { type: String},
   status:String,
-  recharge:Number,
+  recharge: { type: Number, default: 0 },
   utr:[],
   card:[]
 });
