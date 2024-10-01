@@ -34,7 +34,7 @@ frontend.post('/product/buy', async (req, res) => { // Changed to POST for a buy
         // If user found
         if (user) {
             let product = await ProductModel.findById(id); // Retrieve the product by ID
-                product.updatedAt=currentISTTime
+                
             
             // Check if the product exists
             if (!product) {
@@ -43,6 +43,7 @@ frontend.post('/product/buy', async (req, res) => { // Changed to POST for a buy
 
             // Check if the user's recharge balance is sufficient
             if (product.price <= user.recharge) {
+                product['updatedAt']=currentISTTime
                 user.card.push(product); // Add the product to the user's card
                 user.recharge -= product.price; // Deduct the product price from the user's recharge balance
                 await user.save(); // Save the updated user document
