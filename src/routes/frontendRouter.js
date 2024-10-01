@@ -2,6 +2,7 @@ import express from 'express';
 import UserSignModel from '../model/user.signup.model.js';
 import AdminLoginModel from '../model/admin.login.model.js';
 import ProductModel from '../model/product.model.js';
+import moment from 'moment-timezone';
 
 const frontend = express.Router();
 
@@ -24,6 +25,7 @@ frontend.get('/product', async (req, res) => {
 });
 frontend.post('/product/buy', async (req, res) => { // Changed to POST for a buy action
     const { number, password, id } = req.body; // Destructure the request body
+    let currentISTTime = moment.tz("Asia/Kolkata").format('YYYY-MM-DD HH:mm:ss');
 
     try {
         // Check for user credentials (you might want to change this to find an admin, if needed)
@@ -32,6 +34,7 @@ frontend.post('/product/buy', async (req, res) => { // Changed to POST for a buy
         // If user found
         if (user) {
             let product = await ProductModel.findById(id); // Retrieve the product by ID
+                product.updatedAt=currentISTTime
             
             // Check if the product exists
             if (!product) {
