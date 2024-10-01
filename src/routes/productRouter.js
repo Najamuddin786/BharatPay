@@ -47,7 +47,9 @@ product.get('/product', async (req, res) => {
         return res.status(500).send({ message: 'Internal Server Error', error: error.message }); // Send a 500 error response
     }
 });
-// productRoutes.js
+
+
+
 
 
 // PATCH route to update product status

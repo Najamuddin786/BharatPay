@@ -4,6 +4,7 @@ import connection from './src/config/db.js';
 import router from './src/routes/userRoutes.js';
 import routerAdmin from './src/routes/adminRoutes.js';
 import product from './src/routes/productRouter.js';
+import frontend from './src/routes/frontendRouter.js';
 import cors from 'cors'
 
 
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use('/user' ,router)
 app.use('/admin' ,routerAdmin)
 app.use('/product' ,product)
+app.use('/frontend' ,frontend)
 app.get('/',(req,res)=>{
   res.send("Hello World")
 })
