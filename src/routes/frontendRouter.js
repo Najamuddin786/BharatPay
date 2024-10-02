@@ -45,7 +45,7 @@ frontend.post('/product/buy', async (req, res) => { // Changed to POST for a buy
             if (product.price <= user.recharge) {
                 
                 user.card.push({
-                                _id:product._id,
+                                // _id:product._id,
                                 time:currentISTTime,
                                 image:product.image,
                                 category:product.category,
