@@ -43,8 +43,21 @@ frontend.post('/product/buy', async (req, res) => { // Changed to POST for a buy
 
             // Check if the user's recharge balance is sufficient
             if (product.price <= user.recharge) {
-                product['updatedAt']=currentISTTime
-                user.card.push(product); // Add the product to the user's card
+                
+                user.card.push({
+                                _id:product._id,
+                                time:currentISTTime,
+                                image:product.image,
+                                category:product.category,
+                                title:product.title,
+                                totalIncome:product.totalIncome,
+                                originalPrice:product.originalPrice,
+                                day:product.day,
+                                dailyIncome:product.dailyIncome,
+                                price:product.price,
+                                dis:product.dis,
+                                startday:1
+                }); // Add the product to the user's card
                 user.recharge -= product.price; // Deduct the product price from the user's recharge balance
                 await user.save(); // Save the updated user document
 
@@ -66,6 +79,28 @@ frontend.post('/product/buy', async (req, res) => { // Changed to POST for a buy
         res.status(500).send({ message: 'Internal server error' });
     }
 });
+
+frontend.post('/card', async (req, res) => {
+let data=req.body
+    try {
+        // Fetch all products
+        
+        let user = await UserSignModel.findOne({
+            number:data.number,
+            password:data.password
+        })
+        // Filter products where card day is greater than or equal to card day start
+        
+
+        // Return the filtered products
+        res.send(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
 
 
 
