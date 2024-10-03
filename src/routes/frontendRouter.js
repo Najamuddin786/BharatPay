@@ -186,6 +186,7 @@ frontend.post('/claim', async (req, res) => {
                     
                     // Increment the startday by 1
                     mainProduct.startday += 1;
+                    user.wallet += money
 
                     // Mark the card array as modified
                     user.markModified('card');
@@ -211,6 +212,7 @@ frontend.post('/claim', async (req, res) => {
 
                 // Increment the startday by 1
                 mainProduct.startday += 1;
+                user.wallet += money
 
                 // Mark the card array as modified
                 user.markModified('card');
