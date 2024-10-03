@@ -237,6 +237,75 @@ frontend.post('/claim', async (req, res) => {
         res.sendStatus(500); // Internal server error
     }
 });
+frontend.post('/wallet-history', async (req, res) => {
+    const { number, password } = req.body;
+
+    // Input validation
+    if (!number || !password) {
+        return res.status(400).json({ message: 'Number and password are required' });
+    }
+
+    try {
+        // Find the user by number and password
+        const user = await UserSignModel.findOne({ number, password });
+
+        // Check if the user exists
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid number or password' });
+        }
+        let newValue=user.walletD
+        res.status(200).send(newValue);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500); // Use sendStatus for status codes
+    }
+});
+frontend.post('/product-history', async (req, res) => {
+    const { number, password } = req.body;
+
+    // Input validation
+    if (!number || !password) {
+        return res.status(400).json({ message: 'Number and password are required' });
+    }
+
+    try {
+        // Find the user by number and password
+        const user = await UserSignModel.findOne({ number, password });
+
+        // Check if the user exists
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid number or password' });
+        }
+        let newValue=user.card
+        res.status(200).send(newValue);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500); // Use sendStatus for status codes
+    }
+});
+frontend.post('/recharge-history', async (req, res) => {
+    const { number, password } = req.body;
+
+    // Input validation
+    if (!number || !password) {
+        return res.status(400).json({ message: 'Number and password are required' });
+    }
+
+    try {
+        // Find the user by number and password
+        const user = await UserSignModel.findOne({ number, password });
+
+        // Check if the user exists
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid number or password' });
+        }
+        let newValue=user.utr
+        res.status(200).send(newValue);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500); // Use sendStatus for status codes
+    }
+});
 
 
 
