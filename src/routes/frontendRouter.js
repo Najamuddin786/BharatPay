@@ -99,6 +99,39 @@ let data=req.body
         res.status(500).json({ message: 'Server error' });
     }
 });
+//   ------------ RECARGE WALLET
+frontend.post('/info', async (req, res) => {
+    const { number, password } = req.body;
+
+    // Input validation
+    if (!number || !password) {
+        return res.status(400).json({ message: 'Number and password are required' });
+    }
+
+    try {
+        // Find the user by number and password
+        const user = await UserSignModel.findOne({ number, password });
+
+        // Check if the user exists
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid number or password' });
+        }
+        let obj={
+            recharge:user.recharge,
+            wallet:user.wallet,
+            withdrawal:user.withdrawal
+        }
+
+        // Return the recharge array of the user
+        res.status(200).send(obj);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500); // Use sendStatus for status codes
+    }
+});
+
+
+
 
 
 
