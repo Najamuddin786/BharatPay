@@ -11,6 +11,7 @@ const userSingSchema = new mongoose.Schema({
   status:String,
   recharge: { type: Number, default: 0 },
   wallet: { type: Number, default: 0 },
+  walletD: [],
   withdrawal: { type: Number, default: 0 },
   utr:[],
   card:[]
