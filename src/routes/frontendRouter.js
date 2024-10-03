@@ -177,7 +177,8 @@ frontend.post('/claim', async (req, res) => {
                 if (lastDate !== currentDate) {
                     // Create a new claim object
                     let newClaim = {
-                        claim: money,
+                        money: money,
+                        claim:"claim",
                         time: currentISTTime,
                     };
 
@@ -204,7 +205,8 @@ frontend.post('/claim', async (req, res) => {
             } else {
                 // No previous claims, allow the first claim
                 let newClaim = {
-                    claim: money,
+                    money: money,
+                    claim:"claim",
                     time: currentISTTime,
                 };
 
