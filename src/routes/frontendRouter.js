@@ -56,7 +56,8 @@ frontend.post('/product/buy', async (req, res) => { // Changed to POST for a buy
                                 dailyIncome:product.dailyIncome,
                                 price:product.price,
                                 dis:product.dis,
-                                startday:1
+                                startday:1,
+                                claim:[]
                 }); // Add the product to the user's card
                 user.recharge -= product.price; // Deduct the product price from the user's recharge balance
                 await user.save(); // Save the updated user document
@@ -129,6 +130,96 @@ frontend.post('/info', async (req, res) => {
         res.sendStatus(500); // Use sendStatus for status codes
     }
 });
+//   ------------ Claim Product 
+// frontend.post('/claim', async (req, res) => {
+//     let currentISTTime = moment.tz("Asia/Kolkata").format('YYYY-MM-DD HH:mm:ss');
+//     const { number, password, index } = req.body;
+
+//     // Input validation
+//     if (!number || !password || index === undefined) {
+//         return res.status(400).json({ message: 'Number, password, and index are required' });
+//     }
+
+//     try {
+//         // Find the user by number and password
+//         const user = await UserSignModel.findOne({ number, password });
+
+//         // Check if the user exists
+//         if (!user) {
+//             return res.status(401).json({ message: 'Invalid number or password' });
+//         }
+
+//         // Ensure the index is within bounds
+//         if (index < 0 || index >= user.card.length) {
+//             return res.status(404).json({ message: 'Card not found' });
+//         }
+
+//         // Get the card at the provided index
+//         const mainProduct = user.card[index];
+//         const daysLeft = mainProduct.day - mainProduct.startday;
+
+//         // Check if the product is still active (has days left)
+//         if (daysLeft > 0) {
+//             // Get the daily income
+//             let money = mainProduct.dailyIncome;
+
+//             // Check if there are any claims made
+//             let lastClaim = mainProduct.claim.length > 0 
+//                 ? mainProduct.claim[mainProduct.claim.length - 1].time 
+//                 : null;
+
+//             if (lastClaim) {
+//                 // Split last claim date and current date to compare
+//                 const [lastDate] = lastClaim.split(" ");
+//                 const [currentDate] = currentISTTime.split(" ");
+
+//                 // If the last claim was not today, proceed
+//                 if (lastDate !== currentDate) {
+//                     // Create a new claim object
+//                     let newClaim = {
+//                         claim: money,
+//                         time: currentISTTime,
+//                     };
+
+//                     // Add the new claim to the claim array
+//                     mainProduct.claim.push(newClaim);
+
+//                     // Save the updated user
+//                     await user.save();
+
+//                     // Respond with the new claim
+//                     res.status(200).json(newClaim);
+//                 } else {
+//                     // If the claim was already made today
+//                     res.status(400).json({ message: 'Claim already made today' });
+//                 }
+//             } else {
+//                 // No previous claims, allow the first claim
+//                 let newClaim = {
+//                     claim: money,
+//                     time: currentISTTime,
+//                 };
+
+//                 // Add the new claim to the claim array
+//                 mainProduct.claim.push(newClaim);
+
+//                 // Save the updated user
+//                 await user.save();
+
+//                 // Respond with the new claim
+//                 res.status(200).json(newClaim);
+//             }
+//         } else {
+//             // If no days are left in the cycle
+//             res.status(400).json({ message: 'No active days left to claim' });
+//         }
+
+//     } catch (error) {
+//         console.error(error);
+//         res.sendStatus(500); // Internal server error
+//     }
+// });
+
 
 
 
