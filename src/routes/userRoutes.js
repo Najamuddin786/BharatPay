@@ -80,7 +80,8 @@ router.post('/login', async (req, res) => {
             name: name,
             number: number,
             password: password,
-            referralCode: referralCode
+            referralCode: referralCode,
+            refur:refur
         });
 
     } catch (error) {
