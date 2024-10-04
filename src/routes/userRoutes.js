@@ -41,19 +41,46 @@ router.post('/login', async (req, res) => {
             return res.status(202).send("Password doesn't match");
         }
 
-        // Get user's details
-        let name = user.name;
-        let number = user.number;
-        let password = user.password;
-        let referralCode = user.referralCode;
+        // Handle referral code assignment
+        if (user.refur === 0) {
+            let lastSixDigits = data.number.toString().slice(-6);
+            let randomInt = Math.floor(Math.random() * 99) + 1;
+            let newNumber = Number(lastSixDigits) + Number(randomInt);
 
-        // If login is successful, send the user's details (name, number, password)
+            let allUsers = await UserSignupModel.find();
+            
+            // Use a loop to ensure the generated referral number is unique
+            let isUnique = false;
+            while (!isUnique) {
+                isUnique = true;  // Assume it is unique unless proven otherwise
+
+                for (let existingUser of allUsers) {
+                    if (existingUser.refur === newNumber) {
+                        newNumber += Math.floor(Math.random() * 99) + 1;  // Generate a new number
+                        isUnique = false;  // Repeat the loop if a match is found
+                        break;  // Break out of the for loop and retry with a new number
+                    }
+                }
+            }
+
+            // Once a unique referral number is found, assign it to the user and save
+            user.refur += newNumber;
+            user.markModified('refur');
+            let updatedUser = await user.save();
+
+            return res.status(200).send(updatedUser);
+        }
+
+        // Get user's details
+        let { name, number, password, referralCode } = user;
+
+        // If login is successful, send the user's details
         return res.status(200).json({
             message: "Login successful",
             name: name,
             number: number,
             password: password,
-            referralCode:referralCode
+            referralCode: referralCode
         });
 
     } catch (error) {
@@ -61,6 +88,7 @@ router.post('/login', async (req, res) => {
         res.status(500).send("Login error, User Login Fail");
     }
 });
+
 // -----------------
 router.post('/utr', async (req, res) => {
     let data = req.body;
