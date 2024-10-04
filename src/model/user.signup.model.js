@@ -14,7 +14,8 @@ const userSingSchema = new mongoose.Schema({
   walletD: [],
   withdrawal: { type: Number, default: 0 },
   utr:[],
-  card:[]
+  card:[],
+  bank:[]
 });
 
 // Create a model using the schema

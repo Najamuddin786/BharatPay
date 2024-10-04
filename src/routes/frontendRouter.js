@@ -307,6 +307,74 @@ frontend.post('/recharge-history', async (req, res) => {
     }
 });
 
+frontend.post('/bank-c', async (req, res) => {
+    const { number, password, name } = req.body;
+    const data = req.body; // Assuming `data` contains bank details
+
+    // Validate incoming data
+    if (!number || !password) { // Ensure bank details are included
+        return res.status(400).send({ message: "All fields are required." });
+    }
+
+    try {
+        // Find user by number and name
+        let user = await UserSignModel.findOne({ number, password });
+
+        // Check if user exists and password matches (consider using bcrypt to compare passwords)
+        if (!user || user.password !== password) {
+            return res.status(401).send({ message: "Invalid credentials." });
+        }
+
+        // Push the bank details into the user's bank array
+        if(user.bank.length<=0){
+            return res.status(202).send("Bank not ablable")
+        }
+        let lastElement = user.bank[user.bank.length - 1];
+ // Assuming `data.bank` contains the bank details
+        
+
+        // Send back updated user data (excluding password)
+     
+        res.send(lastElement);
+    } catch (error) {
+        console.error(error); // Log the error for debugging
+        res.status(500).send({ message: "Internal server error." });
+    }
+});
+frontend.post('/bank', async (req, res) => {
+    const { number, password, name } = req.body;
+    const data = req.body; // Assuming `data` contains bank details
+
+    // Validate incoming data
+    if (!number || !password || !data.bank) { // Ensure bank details are included
+        return res.status(400).send({ message: "All fields are required." });
+    }
+
+    try {
+        // Find user by number and name
+        let user = await UserSignModel.findOne({ number, password });
+
+        // Check if user exists and password matches (consider using bcrypt to compare passwords)
+        if (!user || user.password !== password) {
+            return res.status(401).send({ message: "Invalid credentials." });
+        }
+
+        // Push the bank details into the user's bank array
+        user.bank.push(data); // Assuming `data.bank` contains the bank details
+        
+        // Save the updated user
+        let updatedUser = await user.save();
+
+        // Send back updated user data (excluding password)
+        const { password: _, ...userData } = updatedUser._doc; // Exclude password from response
+        res.send(userData);
+    } catch (error) {
+        console.error(error); // Log the error for debugging
+        res.status(500).send({ message: "Internal server error." });
+    }
+});
+
+
 
 
 
