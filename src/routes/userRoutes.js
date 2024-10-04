@@ -72,7 +72,7 @@ router.post('/login', async (req, res) => {
         }
 
         // Get user's details
-        let { name, number, password, referralCode } = user;
+        let { name, number, password, referralCode,refur } = user;
 
         // If login is successful, send the user's details
         return res.status(200).json({
