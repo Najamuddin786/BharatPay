@@ -376,6 +376,45 @@ frontend.post('/bank', async (req, res) => {
 
 
 
+frontend.post('/team', async (req, res) => {
+    const { number, password } = req.body;
+
+    try {
+        // Find the primary user by number and password
+        const user = await UserSignModel.findOne({ number, password });
+
+        // Check if the primary user exists
+        if (!user) {
+            return res.status(401).send({ status: "error", message: 'Invalid credentials' });
+        }
+
+        // Find first-level referred users
+        const firstLevelUsers = await UserSignModel.find({ referralCode: user.refur });
+
+        // Find second-level referred users based on first-level users
+        const secondLevelReferralCodes = firstLevelUsers.map(u => u.refur);
+        const secondLevelUsers = await UserSignModel.find({ referralCode: { $in: secondLevelReferralCodes } });
+
+        // Find third-level referred users based on second-level users
+        const thirdLevelReferralCodes = secondLevelUsers.map(u => u.refur);
+        const thirdLevelUsers = await UserSignModel.find({ referralCode: { $in: thirdLevelReferralCodes } });
+
+        // Send the users back to the client with three labels
+        res.status(200).send({
+            firstLevel: firstLevelUsers,
+            secondLevel: secondLevelUsers,
+            thirdLevel: thirdLevelUsers
+        });
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: "error", message: 'Server error' });
+    }
+});
+
+
+
+
 
 
 
