@@ -160,83 +160,125 @@ frontend.post('/claim', async (req, res) => {
 
         // Check if the product is still active (has days left)
         if (daysLeft > 0) {
-            // Get the daily income
             let money = mainProduct.dailyIncome;
 
-            // Check if there are any claims made
             let lastClaim = mainProduct.claim.length > 0 
                 ? mainProduct.claim[mainProduct.claim.length - 1].time 
                 : null;
 
             if (lastClaim) {
-                // Split last claim date and current date to compare
                 const [lastDate] = lastClaim.split(" ");
                 const [currentDate] = currentISTTime.split(" ");
 
-                // If the last claim was not today, proceed
                 if (lastDate !== currentDate) {
-                    // Create a new claim object
                     let newClaim = {
                         money: money,
-                        claim:"claim",
+                        claim: "claim",
                         time: currentISTTime,
                     };
 
                     // Add the new claim to the claim array
                     mainProduct.claim.push(newClaim);
-                    
-                    // Increment the startday by 1
                     mainProduct.startday += 1;
-                    user.wallet += money
-                    user.walletD.push(newClaim)
+                    user.wallet += money;
+                    user.walletD.push(newClaim);
 
-                    // Mark the card array as modified
                     user.markModified('card');
-
-                    // Save the updated user document
                     await user.save();
 
-                    // Respond with the new claim
+                    // Check if the user has a referrer
+                    if (user.refur) {
+                        // Find all users who have this referral code
+                        const referrers = await UserSignModel.find({ referralCode: user.refur });
+
+                        if (referrers && referrers.length > 0) {
+                            for (const referrer of referrers) {
+                                // Check if the referrer has the same product (using _id)
+                                const referrerProduct = referrer.card.find(p => 
+                                    p.isActive && p._id.toString() === mainProduct._id.toString()
+                                );
+
+                                if (referrerProduct) {
+                                    // Calculate referral income (10% of the claimed money)
+                                    const referralIncome = money * 0.10;
+
+                                    // Add the referral income to the referrer's wallet
+                                    referrer.wallet += referralIncome;
+
+                                    // Add the referral income to the referrer's wallet history
+                                    referrer.walletD.push({
+                                        money: referralIncome,
+                                        claim: 'referral_income',
+                                        time: currentISTTime,
+                                    });
+
+                                    referrer.markModified('card');
+                                    await referrer.save();
+                                }
+                            }
+                        }
+                    }
+
                     res.status(200).json(newClaim);
                 } else {
-                    // If the claim was already made today
                     res.status(202).json({ message: 'Claim already made today' });
                 }
             } else {
-                // No previous claims, allow the first claim
                 let newClaim = {
                     money: money,
-                    claim:"claim",
+                    claim: "claim",
                     time: currentISTTime,
                 };
 
-                // Add the new claim to the claim array
                 mainProduct.claim.push(newClaim);
-
-                // Increment the startday by 1
                 mainProduct.startday += 1;
-                user.wallet += money
-                user.walletD.push(newClaim)
+                user.wallet += money;
+                user.walletD.push(newClaim);
 
-                // Mark the card array as modified
                 user.markModified('card');
-
-                // Save the updated user document
                 await user.save();
 
-                // Respond with the new claim
+                // Referral logic after first claim
+                if (user.refur) {
+                    const referrers = await UserSignModel.find({ referralCode: user.refur });
+
+                    if (referrers && referrers.length > 0) {
+                        for (const referrer of referrers) {
+                            // Check if the referrer has the same product (using _id)
+                            const referrerProduct = referrer.card.find(p => 
+                                p.isActive && p._id.toString() === mainProduct._id.toString()
+                            );
+
+                            if (referrerProduct) {
+                                const referralIncome = money * 0.10;
+                                referrer.wallet += referralIncome;
+
+                                referrer.walletD.push({
+                                    money: referralIncome,
+                                    claim: 'referral_income',
+                                    time: currentISTTime,
+                                });
+
+                                referrer.markModified('card');
+                                await referrer.save();
+                            }
+                        }
+                    }
+                }
+
                 res.status(200).json(newClaim);
             }
         } else {
-            // If no days are left in the cycle
             res.status(400).json({ message: 'No active days left to claim' });
         }
 
     } catch (error) {
         console.error(error);
-        res.sendStatus(500); // Internal server error
+        res.sendStatus(500);
     }
 });
+
+
 frontend.post('/wallet-history', async (req, res) => {
     const { number, password } = req.body;
 
