@@ -10,9 +10,9 @@ withdrawalRouter.post('/withdrawal', async (req, res) => {
     const { number, password, amount } = req.body;
 
     // Input validation
-    if (!number || !password || !amount) {
-        return res.status(200).send('Amount are required');
-    }
+    // if (!number || !password || !amount) {
+    //     return res.status(200).send('Amount are required');
+    // }
 
     try {
         // Find the user by number and password
@@ -87,9 +87,9 @@ withdrawalRouter.post('/balance', async (req, res) => {
         // Return the user's current wallet balance
         let f={
             amount:user.wallet, 
-            amount:user.walletD, 
+            walletD:user.walletD, 
         }
-        return res.status(200).json(f);
+        return res.status(200).send(f);
 
     } catch (error) {
         return res.status(500).json('An error occurred while retrieving your balance.');
