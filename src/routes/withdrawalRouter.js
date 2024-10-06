@@ -71,9 +71,9 @@ withdrawalRouter.post('/balance', async (req, res) => {
     const { number, password } = req.body;
 
     // Input validation
-    if (!number || !password) {
-        return res.status(400).json({ message: 'Number and password are required' });
-    }
+    // if (!number || !password) {
+    //     return res.status(400).json({ message: 'Number and password are required' });
+    // }
 
     try {
         // Find the user by number and password
