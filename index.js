@@ -7,6 +7,7 @@ import product from './src/routes/productRouter.js';
 import frontend from './src/routes/frontendRouter.js';
 import claimRouter from './src/routes/userclaimRouter.js';
 import withdrawalRouter from './src/routes/withdrawalRouter.js';
+import wallettorechargerouter from './src/routes/wallettorechargeRoutes.js';
 import cors from 'cors'
 
 
@@ -28,6 +29,7 @@ app.use('/product' ,product)
 app.use('/frontend' ,frontend)
 app.use('/withdrawal' ,withdrawalRouter)
 app.use('/claim' ,claimRouter)
+app.use('/wallet' ,wallettorechargerouter)
 app.get('/',(req,res)=>{
   res.send("Hello World")
 })
